@@ -7,6 +7,6 @@ realm = "shared"
 authors = ["Vyon (https://github.com/Vyon)"]
 
 exclude = ["**"]
-include = ["src", "src/*", "default.project.json"]
+include = ["src", "src/*", "default.project.json", "wally.toml"]
 
 [dependencies]
