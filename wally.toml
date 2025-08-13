@@ -6,4 +6,7 @@ registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 authors = ["Vyon (https://github.com/Vyon)"]
 
+exclude = ["**"]
+include = ["src", "src/*", "default.project.json"]
+
 [dependencies]
