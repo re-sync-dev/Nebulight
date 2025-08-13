@@ -1,0 +1,9 @@
+[package]
+name = "vyon/nebulight"
+description = "Nebulight is an open source lighting preset creation and application library for Roblox"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+authors = ["Vyon (https://github.com/Vyon)"]
+
+[dependencies]

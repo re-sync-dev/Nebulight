@@ -1,0 +1,14 @@
+# Packages
+Packages/*
+!Packages/*.gitkeep
+
+# Temp files
+*.lock
+sourcemap.json
+
+# Build files
+*.rbxm*
+*.rbxl*
+
+# Misc
+dev
