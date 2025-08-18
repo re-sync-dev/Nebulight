@@ -111,9 +111,9 @@ end
 
 ]=]
 function Nebulight.SaveAsModule(Preset: Preset, Minify: boolean?)
-	return `return {PrettyPrint(Preset, {
+	return PrettyPrint(Preset, {
 		minify = Minify,
-	})}`
+	})
 end
 
 return Nebulight
