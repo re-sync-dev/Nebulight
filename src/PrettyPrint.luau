@@ -12,6 +12,7 @@ local typeSortOrder: { [string]: number } = {
 	["boolean"] = 1,
 	["number"] = 2,
 	["string"] = 3,
+	["EnumItem"] = 3,
 	["function"] = 4,
 	["vector"] = 5,
 	["buffer"] = 6,
@@ -65,6 +66,8 @@ local function formatValue(value: unknown, options: ExistingOptions): string
 		end
 
 		return `Vector3.new({value.X},{s}{value.Y},{s}{value.Z})`
+	elseif typeof(value) == "EnumItem" then
+		return `Enum.{tostring(value.EnumType)}.{value.Name}`
 	elseif type(value) ~= "string" then
 		if type(value) == "number" then --> In the specific case of nebulight we don't need high precision
 			value *= 1000

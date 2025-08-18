@@ -28,7 +28,7 @@ export type Preset = Types.Preset
 
 -- Constants:
 local SER_KEYS =
-	{ "Lighting", "Atmosphere", "Bloom", "DepthOfField", "SunRays", "Blur", "ColorCorrection", "ColorGrading" }
+	{ "Lighting", "Sky", "Atmosphere", "Bloom", "DepthOfField", "SunRays", "Blur", "ColorCorrection", "ColorGrading" }
 
 -- Main Module:
 --[=[
@@ -75,6 +75,38 @@ end
 
 	@within Nebulight
 	TODO: Add description
+	
+	@function CreateFromConfig
+	@param Config Folder
+
+	@return Preset
+
+]=]
+function Nebulight.CreateFromConfig(Config: Folder): Preset
+	local Preset = {}
+
+	for _, Child in Config:GetChildren() do
+		if not table.find(SER_KEYS, Child.Name) then --> Sanity check
+			continue
+		end
+
+		local Func = SerDes.Instance.Des[Child.Name]
+
+		if not Func then
+			warn(`[Nebulight.CreateFromConfig]: Deserialize function does not exist for '{Child.Name}'`)
+			continue
+		end
+
+		Func(Child, Preset)
+	end
+
+	return Preset
+end
+
+--[=[
+
+	@within Nebulight
+	TODO: Add description
 
 	@function UsePreset
 	@param Preset Preset
@@ -89,6 +121,10 @@ function Nebulight.UsePreset(Preset: Preset, SkyOnly: boolean?)
 	end
 
 	for _, Key in SER_KEYS do
+		if Key == "Sky" then
+			continue --> Already did it :)
+		end
+
 		local Func = SerDes.Lighting.Ser[Key]
 
 		if not Func then
@@ -109,11 +145,42 @@ end
 	@param Preset Preset
 	@param Minify boolean?
 
+	@return string
+
 ]=]
 function Nebulight.SaveAsModule(Preset: Preset, Minify: boolean?)
 	return PrettyPrint(Preset, {
 		minify = Minify,
 	})
+end
+
+--[=[
+
+	@within Nebulight
+	TODO: Add description
+
+	@function SaveAsConfig
+	@param Preset Preset
+
+	@return Instance
+
+]=]
+function Nebulight.SaveAsConfig(Preset: Preset)
+	local Config = Instance.new("Folder")
+	Config.Name = "Config"
+
+	for _, Key in SER_KEYS do
+		local Func = SerDes.Instance.Ser[Key]
+
+		if not Func then
+			warn(`[Nebulight.SaveAsConfig]: Serialize function does not exist for '{Key}'`)
+			continue
+		end
+
+		Func(Config, Preset)
+	end
+
+	return Config
 end
 
 return Nebulight
