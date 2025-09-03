@@ -288,7 +288,7 @@ return {
 				end
 
 				if Blur.Size then
-					BlurRef.Blur = Blur.Size
+					BlurRef.Size = Blur.Size
 				end
 			else
 				if BlurRef then
