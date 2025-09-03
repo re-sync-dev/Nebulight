@@ -6,4 +6,4 @@
 ___
 Nebulight is an open source lighting preset creation and application library for Roblox. With Nebulight you as the developer can programmatically save and apply presets to your environment with ease.
 
-**It's recommended to use the [Vibrant](https://github.com/re-sync-dev/Vibrant) plugin if you're looking for specifically UI**
+**It's recommended to use the [Vibrant](https://github.com/re-sync-dev/Vibrant) plugin if you're looking for to use this with an interface.**
