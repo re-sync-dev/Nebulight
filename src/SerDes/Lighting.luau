@@ -1,3 +1,4 @@
+--!optimize 1
 --[==[
 
 	[Lighting.luau]:
@@ -10,6 +11,7 @@
 
 -- Modules:
 local Types = require(script.Parent.Parent.Types)
+local SetProperties = require(script.Parent.Parent.SetProperties)
 
 -- Types:
 type Preset = Types.Preset
@@ -17,131 +19,51 @@ type Preset = Types.Preset
 -- Main Module:
 return {
 	Ser = {
-		Lighting = function(Lighting: Lighting, Preset: Preset)
-			if Preset.Brightness then
-				Lighting.Brightness = Preset.Brightness
-			end
-
-			if Preset.Ambient then
-				Lighting.Ambient = Preset.Ambient
-			end
-
-			if Preset.OutdoorAmbient then
-				Lighting.OutdoorAmbient = Preset.OutdoorAmbient
-			end
-
-			if Preset.DiffuseScale then
-				Lighting.EnvironmentDiffuseScale = Preset.DiffuseScale
-			end
-
-			if Preset.SpecularScale then
-				Lighting.EnvironmentSpecularScale = Preset.SpecularScale
-			end
-
-			if Preset.ShadowSoftness then
-				Lighting.ShadowSoftness = Preset.ShadowSoftness
-			end
-
-			if Preset.Exposure then
-				Lighting.ExposureCompensation = Preset.Exposure
-			end
-
-			if Preset.GlobalShadows then
-				Lighting.GlobalShadows = Preset.GlobalShadows
-			end
-
-			if Preset.ColorShift then
-				if Preset.ColorShift.Top then
-					Lighting.ColorShift_Top = Preset.ColorShift.Top
-				end
-
-				if Preset.ColorShift.Bottom then
-					Lighting.ColorShift_Bottom = Preset.ColorShift.Bottom
-				end
-			end
-
-			if Preset.Time then
-				if Preset.Time.Clock then
-					Lighting.ClockTime = Preset.Time.Clock
-				end
-
-				if Preset.Time.Latitude then
-					Lighting.GeographicLatitude = Preset.Time.Latitude
-				end
-			end
-
-			if Preset.Fog then
-				if Preset.Fog.Color then
-					Lighting.FogColor = Preset.Fog.Color
-				end
-
-				if Preset.Fog.Start then
-					Lighting.FogStart = Preset.Fog.Start
-				end
-
-				if Preset.Fog.End then
-					Lighting.FogEnd = Preset.Fog.End
-				end
-			end
+		Lighting = function(Lighting: Lighting, Preset: Preset, Info: TweenInfo?)
+			SetProperties(Lighting, {
+				["Ambient"] = Preset.Ambient,
+				["Brightness"] = Preset.Brightness,
+				["ColorShift"] = Preset.ColorShift,
+				["DiffuseScale"] = Preset.DiffuseScale,
+				["SpecularScale"] = Preset.SpecularScale,
+				["GlobalShadows"] = Preset.GlobalShadows,
+				["OutdoorAmbient"] = Preset.OutdoorAmbient,
+				["ShadowSoftness"] = Preset.ShadowSoftness,
+				["Time"] = Preset.Time,
+				["Exposure"] = Preset.Exposure,
+				["Fog"] = Preset.Fog,
+			}, Info)
 		end,
-		Sky = function(Lighting: Lighting, Preset: Preset)
-			local Skybox = Preset.Sky
-			local SkyboxRef = (Lighting:FindFirstChild("Sky") :: any) :: Sky?
+		Sky = function(Lighting: Lighting, Preset: Preset, Info: TweenInfo?)
+			local Sky = Preset.Sky
+			local SkyRef = (Lighting:FindFirstChild("Sky") :: any) :: Sky?
 
-			if Skybox then
-				if not SkyboxRef then
-					SkyboxRef = Instance.new("Sky")
-					SkyboxRef.Parent = Lighting
+			if Sky then
+				if not SkyRef then
+					SkyRef = Instance.new("Sky")
+					SkyRef.Parent = Lighting
 				end
 
-				-- Skybox texture:
-				for Key, Prop in
-					{
-						Top = "SkyboxUp",
-						Bottom = "SkyboxDn",
-						Left = "SkyboxLf",
-						Right = "SkyboxRt",
-						Front = "SkyboxFt",
-						Back = "SkyboxBk",
-					} :: { [string]: string }
-				do
-					SkyboxRef[Prop] = Skybox[Key]
-				end
-
-				if Skybox.CelestialBodies ~= nil then
-					SkyboxRef.CelestialBodiesShown = Skybox.CelestialBodies
-				end
-
-				if Skybox.Moon then
-					if Skybox.Moon.Size then
-						SkyboxRef.MoonAngularSize = Skybox.Moon.Size
-					end
-
-					if Skybox.Moon.Texture then
-						SkyboxRef.MoonTextureId = Skybox.Moon.Texture
-					end
-				end
-
-				if Skybox.Sun then
-					if Skybox.Sun.Size then
-						SkyboxRef.SunAngularSize = Skybox.Sun.Size
-					end
-
-					if Skybox.Sun.Texture then
-						SkyboxRef.SunTextureId = Skybox.Sun.Texture
-					end
-				end
-
-				if Skybox.StarCount then
-					SkyboxRef.StarCount = Skybox.StarCount
-				end
+				SetProperties(SkyRef, {
+					["Sun"] = Sky.Sun,
+					["Moon"] = Sky.Moon,
+					["Top"] = Sky.Top,
+					["Left"] = Sky.Left,
+					["Back"] = Sky.Back,
+					["Right"] = Sky.Right,
+					["Front"] = Sky.Front,
+					["Bottom"] = Sky.Bottom,
+					["StarCount"] = Sky.StarCount,
+					["Orientation"] = Sky.Orientation,
+					["CelestialBodies"] = Sky.CelestialBodies,
+				}, Info)
 			else
-				if SkyboxRef then
-					SkyboxRef:Destroy()
+				if SkyRef then
+					SkyRef:Destroy()
 				end
 			end
 		end,
-		Atmosphere = function(Lighting: Lighting, Preset: Preset)
+		Atmosphere = function(Lighting: Lighting, Preset: Preset, Info: TweenInfo?)
 			local Atmosphere = Preset.Atmosphere
 			local AtmosphereRef = (Lighting:FindFirstChild("Atmosphere") :: any) :: Atmosphere?
 
@@ -151,36 +73,21 @@ return {
 					AtmosphereRef.Parent = Lighting
 				end
 
-				if Atmosphere.Density then
-					AtmosphereRef.Density = Atmosphere.Density
-				end
-
-				if Atmosphere.Offset then
-					AtmosphereRef.Offset = Atmosphere.Offset
-				end
-
-				if Atmosphere.Color then
-					AtmosphereRef.Color = Atmosphere.Color
-				end
-
-				if Atmosphere.Decay then
-					AtmosphereRef.Decay = Atmosphere.Decay
-				end
-
-				if Atmosphere.Glare then
-					AtmosphereRef.Glare = Atmosphere.Glare
-				end
-
-				if Atmosphere.Haze then
-					AtmosphereRef.Haze = Atmosphere.Haze
-				end
+				SetProperties(AtmosphereRef, {
+					["Density"] = Atmosphere.Density,
+					["Offset"] = Atmosphere.Offset,
+					["Color"] = Atmosphere.Color,
+					["Decay"] = Atmosphere.Decay,
+					["Glare"] = Atmosphere.Glare,
+					["Haze"] = Atmosphere.Haze,
+				}, Info)
 			else
 				if AtmosphereRef then
 					AtmosphereRef:Destroy()
 				end
 			end
 		end,
-		Bloom = function(Lighting: Lighting, Preset: Preset)
+		Bloom = function(Lighting: Lighting, Preset: Preset, Info: TweenInfo?)
 			local Bloom = Preset.Bloom
 			local BloomRef = (Lighting:FindFirstChild("Bloom") :: any) :: BloomEffect?
 
@@ -190,28 +97,19 @@ return {
 					BloomRef.Parent = Lighting
 				end
 
-				if Bloom.Enabled ~= nil then
-					BloomRef.Enabled = Bloom.Enabled
-				end
-
-				if Bloom.Intensity then
-					BloomRef.Intensity = Bloom.Intensity
-				end
-
-				if Bloom.Size then
-					BloomRef.Size = Bloom.Size
-				end
-
-				if Bloom.Threshold then
-					BloomRef.Threshold = Bloom.Threshold
-				end
+				SetProperties(BloomRef, {
+					["Enabled"] = Bloom.Enabled,
+					["Intensity"] = Bloom.Intensity,
+					["Size"] = Bloom.Size,
+					["Threshold"] = Bloom.Threshold,
+				}, Info)
 			else
 				if BloomRef then
 					BloomRef:Destroy()
 				end
 			end
 		end,
-		DepthOfField = function(Lighting: Lighting, Preset: Preset)
+		DepthOfField = function(Lighting: Lighting, Preset: Preset, Info: TweenInfo?)
 			local DepthOfField = Preset.DepthOfField
 			local DepthOfFieldRef = (Lighting:FindFirstChild("DepthOfField") :: any) :: DepthOfFieldEffect?
 
@@ -221,32 +119,20 @@ return {
 					DepthOfFieldRef.Parent = Lighting
 				end
 
-				if DepthOfField.Enabled ~= nil then
-					DepthOfFieldRef.Enabled = DepthOfField.Enabled
-				end
-
-				if DepthOfField.FarIntensity then
-					DepthOfFieldRef.FarIntensity = DepthOfField.FarIntensity
-				end
-
-				if DepthOfField.FocusDistance then
-					DepthOfFieldRef.FocusDistance = DepthOfField.FocusDistance
-				end
-
-				if DepthOfField.InFocusRadius then
-					DepthOfFieldRef.InFocusRadius = DepthOfField.InFocusRadius
-				end
-
-				if DepthOfField.NearIntensity then
-					DepthOfFieldRef.NearIntensity = DepthOfField.NearIntensity
-				end
+				SetProperties(DepthOfFieldRef, {
+					["Enabled"] = DepthOfField.Enabled,
+					["FarIntensity"] = DepthOfField.FarIntensity,
+					["FocusDistance"] = DepthOfField.FocusDistance,
+					["InFocusRadius"] = DepthOfField.InFocusRadius,
+					["NearIntensity"] = DepthOfField.NearIntensity,
+				}, Info)
 			else
 				if DepthOfFieldRef then
 					DepthOfFieldRef:Destroy()
 				end
 			end
 		end,
-		SunRays = function(Lighting: Lighting, Preset: Preset)
+		SunRays = function(Lighting: Lighting, Preset: Preset, Info: TweenInfo?)
 			local SunRays = Preset.SunRays
 			local SunRaysRef = (Lighting:FindFirstChild("SunRays") :: any) :: SunRaysEffect?
 
@@ -256,24 +142,18 @@ return {
 					SunRaysRef.Parent = Lighting
 				end
 
-				if SunRays.Enabled ~= nil then
-					SunRaysRef.Enabled = SunRays.Enabled
-				end
-
-				if SunRays.Intensity then
-					SunRaysRef.Intensity = SunRays.Intensity
-				end
-
-				if SunRays.Spread then
-					SunRaysRef.Spread = SunRays.Spread
-				end
+				SetProperties(SunRaysRef, {
+					["Enabled"] = SunRays.Enabled,
+					["Intensity"] = SunRays.Intensity,
+					["Spread"] = SunRays.Spread,
+				}, Info)
 			else
 				if SunRaysRef then
 					SunRaysRef:Destroy()
 				end
 			end
 		end,
-		Blur = function(Lighting: Lighting, Preset: Preset)
+		Blur = function(Lighting: Lighting, Preset: Preset, Info: TweenInfo?)
 			local Blur = Preset.Blur
 			local BlurRef = (Lighting:FindFirstChild("Blur") :: any) :: BlurEffect?
 
@@ -283,20 +163,17 @@ return {
 					BlurRef.Parent = Lighting
 				end
 
-				if Blur.Enabled ~= nil then
-					BlurRef.Enabled = Blur.Enabled
-				end
-
-				if Blur.Size then
-					BlurRef.Size = Blur.Size
-				end
+				SetProperties(BlurRef, {
+					["Enabled"] = Blur.Enabled,
+					["Size"] = Blur.Size,
+				}, Info)
 			else
 				if BlurRef then
 					BlurRef:Destroy()
 				end
 			end
 		end,
-		ColorCorrection = function(Lighting: Lighting, Preset: Preset)
+		ColorCorrection = function(Lighting: Lighting, Preset: Preset, Info: TweenInfo?)
 			local ColorCorrection = Preset.ColorCorrection
 			local ColorCorrectionRef = (Lighting:FindFirstChild("ColorCorrection") :: any) :: ColorCorrectionEffect?
 
@@ -306,32 +183,20 @@ return {
 					ColorCorrectionRef.Parent = Lighting
 				end
 
-				if ColorCorrection.Enabled ~= nil then
-					ColorCorrectionRef.Enabled = ColorCorrection.Enabled
-				end
-
-				if ColorCorrection.Brightness then
-					ColorCorrectionRef.Brightness = ColorCorrection.Brightness
-				end
-
-				if ColorCorrection.Contrast then
-					ColorCorrectionRef.Contrast = ColorCorrection.Contrast
-				end
-
-				if ColorCorrection.Saturation then
-					ColorCorrectionRef.Saturation = ColorCorrection.Saturation
-				end
-
-				if ColorCorrection.TintColor then
-					ColorCorrectionRef.TintColor = ColorCorrection.TintColor
-				end
+				SetProperties(ColorCorrectionRef, {
+					["Enabled"] = ColorCorrection.Enabled,
+					["Brightness"] = ColorCorrection.Brightness,
+					["Contrast"] = ColorCorrection.Contrast,
+					["Saturation"] = ColorCorrection.Saturation,
+					["TintColor"] = ColorCorrection.TintColor,
+				}, Info)
 			else
 				if ColorCorrectionRef then
 					ColorCorrectionRef:Destroy()
 				end
 			end
 		end,
-		ColorGrading = function(Lighting: Lighting, Preset: Preset)
+		ColorGrading = function(Lighting: Lighting, Preset: Preset, Info: TweenInfo?)
 			local ColorGrading = Preset.ColorGrading
 			local ColorGradingRef = (Lighting:FindFirstChild("ColorGrading") :: any) :: ColorGradingEffect?
 
@@ -341,20 +206,17 @@ return {
 					ColorGradingRef.Parent = Lighting
 				end
 
-				if ColorGrading.Enabled ~= nil then
-					ColorGradingRef.Enabled = ColorGrading.Enabled
-				end
-
-				if ColorGrading.Preset then
-					ColorGradingRef.TonemapperPreset = ColorGrading.Preset
-				end
+				SetProperties(ColorGradingRef, {
+					["Enabled"] = ColorGrading.Enabled,
+					["Preset"] = ColorGrading.Preset,
+				}, Info)
 			else
 				if ColorGradingRef then
 					ColorGradingRef:Destroy()
 				end
 			end
 		end,
-	} :: { [string]: (Lighting: Lighting, Preset: Preset) -> () },
+	} :: { [string]: (Lighting: Lighting, Preset: Preset, Info: TweenInfo?) -> () },
 	Des = {
 		Lighting = function(Ref: Lighting, Preset: Preset)
 			Preset.Brightness = Ref.Brightness

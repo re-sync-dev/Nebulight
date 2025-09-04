@@ -79,11 +79,12 @@ end
 	@function CreateFromConfig
 	@param Config Folder
 
-	@return Preset
+	@return Preset, boolean
 
 ]=]
-function Nebulight.CreateFromConfig(Config: Folder): Preset
+function Nebulight.CreateFromConfig(Config: Folder): (Preset, boolean)
 	local Preset = {}
+	local DidCreate = false
 
 	for _, Child in Config:GetChildren() do
 		if not table.find(SER_KEYS, Child.Name) then --> Sanity check
@@ -97,10 +98,11 @@ function Nebulight.CreateFromConfig(Config: Folder): Preset
 			continue
 		end
 
+		DidCreate = true --> Even though it may not create anything in the des function, we'll still mark it because at least something was found
 		Func(Child, Preset)
 	end
 
-	return Preset
+	return Preset, DidCreate
 end
 
 --[=[
@@ -111,9 +113,10 @@ end
 	@function UsePreset
 	@param Preset Preset
 	@param SkyOnly boolean?
+	@param Info TweenInfo?
 
 ]=]
-function Nebulight.UsePreset(Preset: Preset, SkyOnly: boolean?)
+function Nebulight.UsePreset(Preset: Preset, SkyOnly: boolean?, Info: TweenInfo?)
 	SerDes.Lighting.Ser.Sky(Lighting, Preset)
 
 	if SkyOnly then
@@ -132,7 +135,7 @@ function Nebulight.UsePreset(Preset: Preset, SkyOnly: boolean?)
 			continue
 		end
 
-		Func(Lighting, Preset)
+		Func(Lighting, Preset, Info)
 	end
 end
 
