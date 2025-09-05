@@ -10,66 +10,66 @@
 
 export type Preset = {
 	-- Lighting --
-	Brightness: number?,
 	Ambient: Color3?,
+	Exposure: number?,
+	Brightness: number?,
+	DiffuseScale: number?,
+	SpecularScale: number?,
 	OutdoorAmbient: Color3?,
+	ShadowSoftness: number?,
+	GlobalShadows: boolean?,
+
 	ColorShift: {
 		Top: Color3?,
 		Bottom: Color3?,
 	}?,
-	DiffuseScale: number?,
-	SpecularScale: number?,
-	ShadowSoftness: number?,
-	Exposure: number?,
-	GlobalShadows: boolean?,
 	Time: {
 		Clock: number?, -- ClockTime
 		Latitude: number?, -- GeographicalLatitude
 	}?,
 	Fog: {
+		End: number?,
 		Color: Color3?,
 		Start: number?,
-		End: number?,
 	}?,
 
 	-- Sky --
 	Sky: {
-		Top: string,
-		Bottom: string,
-		Left: string,
-		Right: string,
-		Front: string,
-		Back: string,
-		CelestialBodies: boolean?,
+		Top: string?,
+		Bottom: string?,
+		Left: string?,
+		Right: string?,
+		Front: string?,
+		Back: string?,
 		StarCount: number?,
-
-		Orientation: Vector3,
+		Orientation: Vector3?,
+		CelestialBodies: boolean?,
 
 		Moon: {
-			Texture: string?,
 			Size: number?,
+			Texture: string?,
 		}?,
 		Sun: {
-			Texture: string?,
 			Size: number?,
+			Texture: string?,
 		}?,
 	}?,
 
 	-- Atmosphere --
 	Atmosphere: {
-		Density: number?,
-		Offset: number?,
+		Haze: number?,
 		Color: Color3?,
 		Decay: Color3?,
 		Glare: number?,
-		Haze: number?,
+		Offset: number?,
+		Density: number?,
 	}?,
 
 	-- Bloom --
 	Bloom: {
+		Size: number?,
 		Enabled: boolean?,
 		Intensity: number?,
-		Size: number?,
 		Threshold: number?,
 	}?,
 
@@ -84,24 +84,24 @@ export type Preset = {
 
 	-- SunRays --
 	SunRays: {
+		Spread: number?,
 		Enabled: boolean?,
 		Intensity: number?,
-		Spread: number?,
 	}?,
 
 	-- Blur --
 	Blur: {
-		Enabled: boolean?,
 		Size: number?,
+		Enabled: boolean?,
 	}?,
 
 	-- Color Correction --
 	ColorCorrection: {
 		Enabled: boolean?,
-		Brightness: number?,
 		Contrast: number?,
-		Saturation: number?,
 		TintColor: Color3?,
+		Brightness: number?,
+		Saturation: number?,
 	}?,
 
 	ColorGrading: {

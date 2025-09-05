@@ -17,13 +17,6 @@ local SerDes = require(script.SerDes)
 local PrettyPrint = require(script.PrettyPrint)
 
 -- Types:
---[=[
-
-	@within Nebulight
-	@interface Preset
-	TODO: Fill out
-
-]=]
 export type Preset = Types.Preset
 
 -- Constants:
@@ -36,13 +29,38 @@ local SER_KEYS =
 	@class Nebulight
 	Nebulight is an open source lighting preset creation and application library for Roblox
 
---]=]
+]=]
 local Nebulight = {}
 
 --[=[
 
 	@within Nebulight
-	TODO: Add description
+	@interface Preset
+	.Brightness number?,
+	.Ambient Color3?,
+	.OutdoorAmbient Color3?,
+	.ColorShift { Top: Color3?, Bottom: Color3? }?,
+	.DiffuseScale number?,
+	.SpecularScale number?,
+	.ShadowSoftness number?,
+	.Exposure number?,
+	.GlobalShadows boolean?,
+	.Time { Clock: number?, Latitude: number? }?,
+	.Fog { Color: Color3?, Start: number?, End: number? }?,
+	.Sky { Top: string, Bottom: string, Left: string, Right: string, Front: string, Back: string, CelestialBodies: boolean?, StarCount: number?, Orientation: Vector3?, Moon: { Texture: string?, Size: number? }?, Sun: { Texture: string?, Size: number? }? }?,
+	.Atmosphere { Density: number?, Offset: number?, Color: Color3?, Decay: Color3?, Glare: number?, Haze: number? }?,
+	.Bloom { Enabled: boolean?, Intensity: number?, Size: number?, Threshold: number? }?,
+	.DepthOfField { Enabled: boolean?, FarIntensity: number?, FocusDistance: number?, InFocusRadius: number?, NearIntensity: number? }?,
+	.SunRays { Enabled: boolean?, Intensity: number?, Spread: number? }?,
+	.Blur { Enabled: boolean?, Size: number? }?,
+	.ColorCorrection: { Enabled: boolean?, Brightness: number?, Contrast: number?, Saturation: number?, TintColor: Color3? }?,
+	.ColorGrading { Enabled: boolean?, Preset: Enum.TonemapperPreset? }?,
+]=]
+
+--[=[
+
+	@within Nebulight
+	Creates a preset from the game's current lighting
 	
 	@function CreatePreset
 	@return Preset
@@ -74,12 +92,12 @@ end
 --[=[
 
 	@within Nebulight
-	TODO: Add description
+	Converts a Folder into a Preset object
 	
 	@function CreateFromConfig
 	@param Config Folder
 
-	@return Preset, boolean
+	@return (Preset, boolean)
 
 ]=]
 function Nebulight.CreateFromConfig(Config: Folder): (Preset, boolean)
@@ -108,7 +126,7 @@ end
 --[=[
 
 	@within Nebulight
-	TODO: Add description
+	Applies the properties and classes to the Lighting
 
 	@function UsePreset
 	@param Preset Preset
@@ -142,7 +160,8 @@ end
 --[=[
 
 	@within Nebulight
-	TODO: Add description
+	Converts the preset into a stringified version by pretty printing it.
+	Optionally the preset can be minified.
 
 	@function SaveAsModule
 	@param Preset Preset
@@ -160,12 +179,12 @@ end
 --[=[
 
 	@within Nebulight
-	TODO: Add description
+	Converts the Preset into an instance based format
 
 	@function SaveAsConfig
 	@param Preset Preset
 
-	@return Instance
+	@return Folder
 
 ]=]
 function Nebulight.SaveAsConfig(Preset: Preset)

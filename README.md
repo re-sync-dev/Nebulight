@@ -1,6 +1,6 @@
 <div style="display: flex; width: 100%;">
-	<img src="./assets/logo-dark.png#gh-dark-mode-only" alt="Vibrant">
-	<img src="./assets/logo-light.png#gh-light-mode-only" alt="Vibrant">
+	<img src="./assets/logo-dark.png#gh-dark-mode-only" alt="Vibrant"></img>
+	<img src="./assets/logo-light.png#gh-light-mode-only" alt="Vibrant"></img>
 </div>
 
 ___
