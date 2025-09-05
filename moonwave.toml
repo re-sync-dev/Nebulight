@@ -3,6 +3,7 @@ gitRepoUrl = "https://github.com/re-sync-dev/Nebulight" # From Git
 
 gitSourceBranch = "main"
 changelog = false
+includeReadme = false
 classOrder = []
 
 [docusaurus]
