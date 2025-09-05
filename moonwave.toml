@@ -3,11 +3,15 @@ gitRepoUrl = "https://github.com/re-sync-dev/Nebulight" # From Git
 
 gitSourceBranch = "main"
 changelog = false
-includeReadme = false
 classOrder = []
 
 [docusaurus]
+onBrokenLinks = "warn"
 onBrokenMarkdownLinks = "warn"
+
+[home]
+enabled = true
+includeReadme = false
 
 # From git:
 organizationName = "re-sync-dev"
